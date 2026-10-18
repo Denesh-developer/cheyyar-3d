@@ -1,0 +1,21 @@
+{
+  "name": "cheyyar-3d-town",
+  "version": "1.0.0",
+  "description": "Cheyyar 3D Virtual Town & Cheyyar Talkies with Leo screening, real-time multiplayer synchronization, and mobile touch controls.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "cheyyar",
+    "threejs",
+    "3d-town",
+    "metaverse",
+    "tamil-nadu",
+    "multiplayer",
+    "cinema-sync"
+  ],
+  "author": "Denesh",
+  "license": "MIT"
+}

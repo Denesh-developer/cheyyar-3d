@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-023JCJ908R"></script>
+<script src="/ga.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#5b1f1a">
+<title>Namma Ooru — Play for your district</title>
+<meta name="description" content="Explore a miniature Tamil Nadu and Kerala in 3D. Visit 90 landmarks across all 52 districts, collect jasmine, mangoes, coconuts and tea leaves, and climb the district leaderboard.">
+<meta property="og:title" content="Namma Ooru — Play for your district">
+<meta property="og:description" content="A 3D miniature Tamil Nadu and Kerala. Pick your state and district, collect, explore and climb the district leaderboard.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://explore.nestmedia.in/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://explore.nestmedia.in/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<!-- iOS has no fullscreen API for a page; added to the Home Screen it runs without browser chrome. -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Namma Ooru">
+<link rel="preload" href="/images/tamilnadu-welcome-v1.webp" as="image" fetchpriority="high">
+<link rel="preload" href="/fonts/baloo-thambi-2-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <script type="module" crossorigin src="/assets/index-B6ZfsRmH.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-B3-ik3Si.css">
+</head>
+<body class="welcome">
+<div id="app">
+  <div id="ad-top" class="ad-wrap ad-top" data-slot="top" hidden></div>
+  <div id="layout">
+    <main id="stage">
+      <canvas id="scene" aria-label="3D map of Tamil Nadu and Kerala"></canvas>
+
+      <div id="loader" class="loader">
+        <div class="loader-mark" aria-hidden="true"></div>
+        <h1 class="brand-title"><span data-i18n="title">Namma Ooru</span></h1>
+        <p class="loader-note" data-i18n="loading">Laying out the districts…</p>
+        <div class="loader-bar"><i id="loader-fill"></i></div>
+        <button type="button" class="loader-music" id="loader-music" hidden>🎵 <span data-i18n="tapMusic">Tap for music</span></button>
+      </div>
+
+      <div id="rotate-hint" class="rotate-hint" role="status" hidden>
+        <span class="rh-phone" aria-hidden="true"></span>
+        <p data-i18n="rotateHint">Turn your phone sideways for the best view</p>
+        <button type="button" class="rh-x" id="rotate-close" aria-label="Close">×</button>
+      </div>
+
+      <div id="hud" class="hud" hidden>
+        <div class="hud-top-left">
+          <div class="brand-chip"><span class="brand-dot"></span><b data-i18n="title">Namma Ooru</b></div>
+          <button class="hud-expand" id="btn-expand" type="button" aria-label="Show all buttons" aria-expanded="false"><span>☰</span><b class="dot" id="expand-dot" hidden></b></button>
+          <div class="hud-row">
+          <button class="profile-chip" id="btn-profile" type="button" title="My profile" aria-label="My profile" hidden><i id="profile-initial">?</i><span id="profile-name"></span><b class="profile-pm" id="profile-pm" hidden>✉</b></button>
+          <div class="score-chip" id="score-chip">
+            <span class="score-icon" aria-hidden="true">🏆</span>
+            <span class="score-num" id="score">0</span><span class="score-label" data-i18n="points">points</span>
+            <span class="rank" id="rank"></span>
+          </div>
+          </div>
+          <button class="level-chip" id="level-chip" type="button" aria-label="Levels"><span class="level-icon">🎯</span><span class="level-num">Level 0</span><span class="level-bar"><i></i></span></button>
+          <button class="hunt-chip heist-chip" id="heist-chip" type="button" hidden><span class="hunt-icon" aria-hidden="true">🛕</span><span class="hunt-label hs-label">Idol heist</span><span class="hunt-count hs-count">🛕</span></button>
+          <button class="hunt-chip garuda-chip" id="garuda-chip" type="button" hidden><span class="hunt-icon" aria-hidden="true">🚁</span><span class="hunt-label gr-label">Operation Garuda</span><span class="hunt-count gr-count">🚁</span></button>
+          <button class="hunt-chip lifeline-chip" id="lifeline-chip" type="button" hidden><span class="hunt-icon" aria-hidden="true">🚒</span><span class="hunt-label lf-label">Operation Lifeline</span><span class="hunt-count lf-count">🚒</span></button>
+          <button class="hunt-chip kaaval-chip" id="kaaval-chip" type="button" hidden><span class="hunt-icon" aria-hidden="true">🚨</span><span class="hunt-label kv-label">Operation Kaaval</span><span class="hunt-count kv-count">🚨</span></button>
+          <button class="hunt-chip" id="hunt-chip" type="button" hidden><span class="hunt-icon" aria-hidden="true">💰</span><span class="hunt-label" data-i18n="hunt.chip">Treasure hunt</span><span class="hunt-count">0/5</span></button>
+          <div id="players" class="players-chip" hidden></div>
+          <div class="chip-pair">
+          <a class="wa-chip" id="wa-chip" target="_blank" rel="noopener" aria-label="Join our WhatsApp group"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+          <button class="mate-chip" id="mate-chip" type="button" aria-label="Your companion" title="Your companion"><span id="mate-face"></span><b class="dot" id="mate-dot" hidden></b></button>
+          <button class="kadai-chip" id="kadai-chip" type="button" aria-label="Nearest tea kadai" title="Nearest tea kadai"><span aria-hidden="true">🍵</span><b class="dot" id="kadai-dot" hidden></b></button>
+          <button class="kadai-chip bar-chip" id="bar-chip" type="button" aria-label="Nearest bar (18+)" title="Nearest bar (18+)"><span aria-hidden="true">🍸</span></button>
+          </div>
+          <div class="where" id="where"></div>
+          <div class="sync" id="sync-state"></div>
+          <div class="top-chip" id="top-chip" hidden></div>
+        </div>
+
+        <div class="hud-side">
+          <div class="hud-buttons">
+            <button class="icon-btn" id="btn-map" title="Map and travel" aria-label="Map and travel">🗺️</button>
+            <button class="icon-btn" id="btn-chat" title="Chat" aria-label="Chat">💬<span class="dot" id="chat-dot" hidden></span></button>
+            <button class="icon-btn" id="btn-friends" title="Friends" aria-label="Friends">🤝<span class="dot" id="friends-dot" hidden></span></button>
+            <button class="icon-btn pm-btn" id="btn-pm" title="Messages from the game team" aria-label="Messages from the game team" hidden>✉️<span class="dot pm-dot" id="pm-dot" hidden></span></button>
+            <button class="icon-btn" id="btn-cam" title="Camera" aria-label="Camera">🎥</button>
+            <button class="icon-btn menu-btn" id="btn-menu" title="Menu" aria-label="Menu" hidden>☰<span class="dot" hidden></span></button>
+            <button class="icon-btn extra" id="btn-full" title="Full screen" aria-label="Full screen" hidden>⛶</button>
+            <button class="icon-btn" id="btn-more" title="More" aria-label="More" aria-expanded="false" hidden>⋯</button>
+            <button class="icon-btn extra" id="btn-board" title="Leaderboard" aria-label="Leaderboard">🏆</button>
+            <button class="icon-btn extra" id="btn-passport" title="Passport" aria-label="Passport">📘</button>
+            <button class="icon-btn extra" id="btn-weather" title="Weather" aria-label="Weather">☀️</button>
+            <button class="icon-btn extra" id="btn-help" title="How to play" aria-label="How to play">❓</button>
+            <button class="icon-btn extra" id="btn-reset" title="Reset my position" aria-label="Reset my position">📍</button>
+            <button class="icon-btn extra" id="btn-share" title="Share" aria-label="Share">🔗</button>
+            <button class="icon-btn extra" id="btn-feedback" title="Feedback" aria-label="Feedback">✉️</button>
+            <button class="icon-btn extra" id="btn-settings" title="Settings" aria-label="Settings">⚙️</button>
+            <button class="icon-btn" id="btn-filmtest" title="Film test (testers)" aria-label="Film test" hidden>🎞️</button>
+          </div>
+          <div class="zoom-pad">
+            <button class="icon-btn round" id="btn-zoom-in" aria-label="Zoom in">+</button>
+            <button class="icon-btn round" id="btn-zoom-out" aria-label="Zoom out">−</button>
+          </div>
+        </div>
+
+        <div id="world-ui" class="world-ui"></div>
+        <div id="talk-panel" class="talk-panel" hidden></div>
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+        <div id="level-progress" class="level-progress" role="status" hidden></div>
+        <div id="level-up" class="level-up" hidden></div>
+        <div id="level-hint" class="level-hint" role="status" hidden></div>
+        <div id="early-note" class="early-note" role="status" hidden>
+          <button type="button" class="early-x" id="early-close" aria-label="Close">×</button>
+          <b id="early-title"></b><span id="early-text"></span><span class="early-count" id="early-count"></span>
+        </div>
+        <div id="admin-note" class="early-note admin-note" role="alert" hidden>
+          <button type="button" class="early-x" id="admin-note-close" aria-label="Close">×</button>
+          <b class="pm-note-from"><span class="pm-badge small" aria-hidden="true">✓</span><span id="admin-note-title"></span></b>
+          <span id="admin-note-text"></span>
+          <button type="button" class="pm-note-reply" id="admin-note-reply">Reply</button>
+        </div>
+
+        <div id="voice-bar" class="voice-bar" hidden></div>
+        <div id="chat" class="chat">
+          <div class="chat-head" id="chat-head">
+            <b id="chat-title">Chat</b><span class="chat-count" id="chat-count"></span>
+            <button type="button" class="chat-x" id="chat-close" aria-label="Close">×</button>
+          </div>
+          <button type="button" class="chat-mic-chip" id="mic-chip" hidden></button>
+          <ol id="chat-log" class="chat-log" aria-live="polite"></ol>
+          <button type="button" class="chat-new" id="chat-new" hidden>↓</button>
+          <form id="chat-form" class="chat-form" hidden>
+            <button type="button" class="chat-mic" id="chat-mic" aria-label="Voice">🎙</button>
+            <input id="chat-input" type="text" maxlength="140" autocomplete="off" autocapitalize="sentences" spellcheck="false">
+            <button type="submit" class="chat-send" aria-label="Send">➤</button>
+          </form>
+        </div>
+        <div id="guide" class="guide" hidden><span class="guide-arrow" id="guide-arrow">➤</span><span id="guide-text"></span></div>
+        <div id="prompt" class="prompt" hidden></div>
+        <button type="button" class="icon-btn fold-btn" id="btn-fold" aria-label="More buttons">☰</button>
+        <div id="garuda-hud" class="garuda-hud" hidden>
+          <div class="gh-row"><div class="gh-alt"><span>ALT</span><b>0 m</b></div><div class="gh-fuel"><span>FUEL</span><em><i></i></em></div><div class="gh-time"></div></div>
+          <div class="gh-people"></div>
+          <div class="gh-hint"></div>
+        </div>
+        <div id="ent-bar" class="ent-bar" hidden></div>
+        <div id="gesture-bar" class="gesture-bar" hidden></div>
+        <div id="card" class="lm-card" hidden></div>
+        <div id="help" class="help-hint"></div>
+
+        <div class="touch" id="touch" hidden>
+          <div class="stick-zone" id="stick-zone"><div class="stick" id="stick"><i id="stick-knob"></i></div></div>
+          <!-- Driving: steer with the left thumb, accelerator and brake under the right, as in a phone racing game. -->
+          <div class="drive-pad" id="drive-pad" hidden>
+            <div class="steer">
+              <button class="d-btn" id="d-left" aria-label="Steer left">◀</button>
+              <button class="d-btn" id="d-right" aria-label="Steer right">▶</button>
+            </div>
+            <div class="lift">
+              <button class="d-btn up" id="d-up" aria-label="Climb">⤒</button>
+              <button class="d-btn down" id="d-down" aria-label="Descend">⤓</button>
+            </div>
+            <div class="pedals">
+              <button class="d-btn brake" id="d-brake" aria-label="Brake and reverse">▼</button>
+              <button class="d-btn gas" id="d-gas" aria-label="Accelerate">▲</button>
+            </div>
+          </div>
+          <div class="touch-buttons">
+            <button class="t-btn" id="t-action" aria-label="Action" hidden>🛺</button>
+            <button class="t-btn" id="t-fish" aria-label="Fish" hidden>🎣</button>
+            <button class="t-btn" id="t-horn" aria-label="Horn" hidden>📯</button>
+            <button class="t-btn t-fire" id="t-fire" aria-label="Fire" hidden>🔫</button>
+            <button class="t-btn" id="t-wave" aria-label="Gestures">👋</button>
+            <button class="t-btn" id="t-jump" aria-label="Jump">⤒</button>
+          </div>
+        </div>
+
+        <nav class="foot-links">
+          <a href="/privacy.html" target="_blank" rel="noopener" data-i18n="privacy">Privacy</a>
+          <a href="/terms.html" target="_blank" rel="noopener" data-i18n="terms">Terms</a>
+        </nav>
+      </div>
+
+      <div id="treasure-found" class="treasure-found" role="dialog" aria-live="polite" hidden></div>
+      <div id="modal-root"></div>
+    </main>
+
+    <aside id="rail" class="rail">
+      <section class="rail-card">
+        <h2 data-i18n="districtRace">District race</h2>
+        <ol id="rail-board" class="mini-board"></ol>
+        <p class="rail-note rail-winner" id="rail-winner"></p>
+        <p class="rail-note" id="rail-online"></p>
+      </section>
+      <div id="ad-side" class="ad-wrap ad-side" data-slot="side" hidden></div>
+      <section class="rail-card rail-how">
+        <h2 data-i18n="howToPlay">How to play</h2>
+        <p data-i18n="howText">Walk with WASD or the arrow keys. Press E near an auto, bus or boat to ride. Every point you collect counts for your district.</p>
+      </section>
+    </aside>
+  </div>
+</div>
+<noscript>Namma Ooru needs JavaScript and WebGL.</noscript>
+</body>
+</html>
