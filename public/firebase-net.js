@@ -230,5 +230,18 @@
     return nativeFetch(input, init);
   };
 
+  // The game also sends a few telemetry pings with navigator.sendBeacon (e.g. a=load).
+  // There is no PHP server any more, so swallow them quietly instead of getting a 403.
+  if (navigator.sendBeacon) {
+    var nativeBeacon = navigator.sendBeacon.bind(navigator);
+    navigator.sendBeacon = function (url, data) {
+      try {
+        var u = new URL(typeof url === 'string' ? url : String(url), location.href);
+        if (u.origin === location.origin && u.pathname === API_PATH) return true;
+      } catch (e) { /* ignore */ }
+      return nativeBeacon(url, data);
+    };
+  }
+
   window.__firebaseNet = { state: state, handlers: handlers };
 })();
