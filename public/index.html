@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+<script src="/firebase-net.js"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-023JCJ908R"></script>
 <script src="/ga.js"></script>
 <meta charset="utf-8">
@@ -43,7 +44,7 @@
           <h1 class="brand-title-modern">நம்ம செய்யாறு</h1>
           <p class="brand-subtitle-modern">Experience Cheyyar in 3D • Streets, Temples & Heritage</p>
           <div class="loader-bar-modern"><i id="loader-fill" style="width: 0%;"></i></div>
-          <p class="loader-status-text" id="loader-note">Laying out the 3D streets of Cheyyar…</p>
+          <p class="loader-status-text loader-note" id="loader-note">Laying out the 3D streets of Cheyyar…</p>
           <button type="button" class="loader-music" id="loader-music" hidden>🎵 <span data-i18n="tapMusic">Tap for music</span></button>
         </div>
       </div>
@@ -102,6 +103,7 @@
             <button class="icon-btn extra" id="btn-share" title="Share" aria-label="Share">🔗</button>
             <button class="icon-btn extra" id="btn-feedback" title="Feedback" aria-label="Feedback">✉️</button>
             <button class="icon-btn extra" id="btn-settings" title="Settings" aria-label="Settings">⚙️</button>
+            <button class="icon-btn extra" id="btn-filmtest" title="Film test" aria-label="Film test" hidden>🎬</button>
             <button type="button" class="icon-btn" id="btn-touch-toggle" title="Mobile Joystick / டச் கண்ட்ரோல்" aria-label="Mobile Controls">🎮</button>
           </div>
           <div class="zoom-pad">
@@ -300,38 +302,29 @@
   }
   setInterval(checkLoaderHide, 200);
 
-  // Mobile Touch Controls: Auto-enable on phone/tablet & allow 1-click toggle
+  // Mobile Touch Controls: only on real touch devices (coarse pointer). Never on PC / narrow desktop windows.
+  const coarse = window.matchMedia('(pointer: coarse)');
   function enableTouchControls() {
-    const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth <= 1024;
-    if (isMobile) {
-      document.body.classList.add('touch-mode');
-      const app = document.getElementById('app');
-      if (app) app.classList.add('touch-mode');
-      const touchEl = document.getElementById('touch');
-      if (touchEl) touchEl.hidden = false;
-    }
+    if (!coarse.matches) return;
+    document.body.classList.add('touch-mode');
+    const app = document.getElementById('app');
+    if (app) app.classList.add('touch-mode');
+    const touchEl = document.getElementById('touch');
+    if (touchEl && !touchEl.dataset.userHidden) touchEl.hidden = false;
   }
   window.addEventListener('load', enableTouchControls);
-  window.addEventListener('resize', enableTouchControls);
-  document.addEventListener('touchstart', enableTouchControls, { passive: true });
 
-  // 1-Click Gamepad button toggle
+  // Gamepad toggle (touch devices only)
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('#btn-touch-toggle');
-    if (btn) {
-      const touchEl = document.getElementById('touch');
-      const app = document.getElementById('app');
-      if (touchEl) {
-        touchEl.hidden = !touchEl.hidden;
-        if (!touchEl.hidden) {
-          if (app) app.classList.add('touch-mode');
-          document.body.classList.add('touch-mode');
-        } else {
-          if (app) app.classList.remove('touch-mode');
-          document.body.classList.remove('touch-mode');
-        }
-      }
-    }
+    if (!btn || !coarse.matches) return;
+    const touchEl = document.getElementById('touch');
+    const app = document.getElementById('app');
+    if (!touchEl) return;
+    touchEl.hidden = !touchEl.hidden;
+    touchEl.dataset.userHidden = touchEl.hidden ? '1' : '';
+    document.body.classList.toggle('touch-mode', !touchEl.hidden);
+    if (app) app.classList.toggle('touch-mode', !touchEl.hidden);
   });
 </script>
 </body>
